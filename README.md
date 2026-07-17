@@ -176,9 +176,3 @@ before submitting, if screenshots are required by your program.)*
   "not found" message instead of crashing.
 - Corrupted or missing JSON data files are handled gracefully (the app
   starts with empty data rather than crashing).
-## Author
-- Name : Ch Jahnavi
-- College : Pragati Engineering College
-
-## License
-This project is based on educational and internship purpose

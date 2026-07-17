@@ -1,0 +1,4 @@
+# This project uses only the Python standard library (json, os, datetime).
+# No external packages are required. This file exists so build tools
+# (e.g. Render, Heroku) that expect a requirements.txt can complete
+# their build step successfully.
