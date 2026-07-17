@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Products</h1>
+      <p class="subhead">{{ products|length }} item{{ '' if products|length == 1 else 's' }} on file.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('add_product') }}">+ Add Product</a>
+  </div>
+
+  <form class="search-row" method="get" action="{{ url_for('list_products') }}">
+    <input type="text" name="q" placeholder="Search by Product ID or Name…" value="{{ query or '' }}">
+    <button class="btn" type="submit">Search</button>
+    {% if query %}<a class="btn" href="{{ url_for('list_products') }}">Clear</a>{% endif %}
+  </form>
+
+  {% if products %}
+    <table class="ledger">
+      <tr>
+        <th>ID</th><th>Name</th><th>Category</th>
+        <th class="num-cell">Price</th><th class="num-cell">Qty</th>
+        <th>Supplier</th><th>Status</th><th></th>
+      </tr>
+      {% for p in products %}
+      <tr class="{{ 'low' if p.quantity < threshold else '' }}">
+        <td><span class="tag">{{ p.product_id }}</span></td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category }}</td>
+        <td class="num-cell">{{ "%.2f"|format(p.price) }}</td>
+        <td class="num-cell">{{ p.quantity }}</td>
+        <td>{{ p.supplier }}</td>
+        <td>
+          {% if p.quantity < threshold %}
+            <span class="pill low">Low</span>
+          {% else %}
+            <span class="pill ok">OK</span>
+          {% endif %}
+        </td>
+        <td class="actions">
+          <a class="btn btn-sm" href="{{ url_for('update_product', product_id=p.product_id) }}">Edit</a>
+          <form method="post" action="{{ url_for('delete_product', product_id=p.product_id) }}"
+                onsubmit="return confirm('Delete {{ p.product_id }} — {{ p.name }}? This cannot be undone.');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <div class="empty">
+      {% if query %}No products match "{{ query }}".{% else %}No products on file yet. Add the first one.{% endif %}
+    </div>
+  {% endif %}
+{% endblock %}

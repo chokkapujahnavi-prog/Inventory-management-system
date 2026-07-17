@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Inventory{% endblock %} · Stockroom Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="{{ url_for('dashboard') }}">Stockroom <span>Ledger</span></a>
+      <nav class="main">
+        <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active=='dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('list_products') }}" class="{{ 'active' if active=='products' }}">Products</a>
+        <a href="{{ url_for('list_sales') }}" class="{{ 'active' if active=='sales' }}">Sales</a>
+        <a href="{{ url_for('reports_page') }}" class="{{ 'active' if active=='reports' }}">Reports</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer class="site">Stockroom Ledger — local inventory &amp; sales tracker</footer>
+  </div>
+</body>
+</html>

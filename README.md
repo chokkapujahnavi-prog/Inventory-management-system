@@ -1,9 +1,13 @@
 # Inventory Management System
 
-A console-based **Inventory Management System** built in Python as part of a
-Python Development Internship project. It helps businesses manage products,
-stock levels, sales records, and inventory updates through a simple,
-menu-driven interface.
+An **Inventory Management System** built in Python as part of a Python
+Development Internship project. It helps businesses manage products, stock
+levels, sales records, and inventory updates. It ships in two forms that
+share the same underlying logic:
+
+- a **console app** (`main.py`) — the original menu-driven interface, and
+- a **web app** (`app.py`) — a Flask front-end over the same data, deployable
+  to a platform like Render.
 
 ## Project Overview
 
@@ -29,27 +33,35 @@ object-oriented programming, file handling, and user interaction.
 
 ## Technologies Used
 
-- **Python 3.x** (standard library only — no installation required)
+- **Python 3.x**
 - `json` — data persistence
 - `os` — file/directory handling
 - `datetime` — timestamping sales records
+- **Flask** — powers the optional web interface (`app.py`)
+- **gunicorn** — production WSGI server used to run the web interface when deployed
 
-No third-party packages (like `pandas` or `tabulate`) are required to run
-the project; a lightweight built-in table printer is used instead so the
-project works out of the box on any machine with Python 3 installed.
+The console app (`main.py`) uses only the Python standard library — no
+installation required, and a lightweight built-in table printer is used
+instead of `pandas`/`tabulate` so it works out of the box. Flask and
+gunicorn are only needed if you run the web version.
 
 ## Project Structure
 
 ```
 inventory_management_system/
 │
-├── main.py          # Menu-driven console interface (entry point)
+├── main.py          # Console entry point (menu-driven interface)
+├── app.py           # Web entry point (Flask app, same logic underneath)
 ├── models.py         # Product data structure (OOP class)
 ├── inventory.py       # Product Management + Stock Management modules
 ├── sales.py          # Sales Management module
-├── reports.py         # Inventory Report + Sales Report module
+├── reports.py         # Inventory Report + Sales Report module (console)
 ├── storage.py         # JSON file read/write (persistence layer)
 ├── utils.py           # Shared helpers: table printing, input validation
+├── requirements.txt    # Flask + gunicorn (needed for the web app)
+├── Procfile            # Tells Render/Heroku how to start the web app
+├── templates/          # HTML templates for the web app (Jinja2)
+├── static/style.css     # Stylesheet for the web app
 ├── README.md
 └── data/
     ├── products.json  # Sample product records
@@ -99,6 +111,42 @@ navigate and extend:
 5. All changes are saved automatically to `data/products.json` and
    `data/sales.json` after every add/update/delete/sale, so you can close
    and reopen the program without losing data.
+
+### Running the Web Version Locally
+
+1. Install the extra dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Start the Flask dev server:
+   ```bash
+   python3 app.py
+   ```
+3. Open **http://127.0.0.1:5000** in your browser.
+
+### Deploying the Web Version to Render
+
+1. Push this whole folder (including `requirements.txt`, `Procfile`, `app.py`,
+   `templates/`, and `static/`) to a GitHub repository.
+2. In Render, create a **new Web Service** from that repo.
+3. Render will detect `requirements.txt` automatically for the build step
+   (`pip install -r requirements.txt`).
+4. Set the **Start Command** to:
+   ```
+   gunicorn app:app
+   ```
+   (This is also what the included `Procfile` specifies, so Render may
+   pick it up automatically.)
+5. Leave the **Root Directory** as the folder containing `app.py` if you
+   didn't put the project at the repo root.
+6. Deploy. Render assigns the app a public URL once the build succeeds.
+
+**Note on storage**: the web app persists data to `data/products.json` and
+`data/sales.json` on disk, same as the console app. Most PaaS platforms
+(including Render's free tier) use an **ephemeral filesystem** — files
+written while the app is running are lost on redeploy or restart. For a
+real production deployment, swap `storage.py` for a proper database, or
+attach a persistent disk if your platform supports one.
 
 ### Sample Data
 The project ships with a few sample products (`P001`–`P004`) and two
