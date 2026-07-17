@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Sales{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Sales</h1>
+      <p class="subhead">{{ sales|length }} transaction{{ '' if sales|length == 1 else 's' }} recorded.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('record_sale') }}">Record Sale</a>
+  </div>
+
+  {% if sales %}
+    <table class="ledger">
+      <tr>
+        <th>Sale ID</th><th>Product</th><th class="num-cell">Qty</th>
+        <th class="num-cell">Unit Price</th><th class="num-cell">Total</th><th>Date</th>
+      </tr>
+      {% for s in sales|reverse %}
+      <tr>
+        <td>{{ s.sale_id }}</td>
+        <td><span class="tag">{{ s.product_id }}</span> {{ s.product_name }}</td>
+        <td class="num-cell">{{ s.quantity_sold }}</td>
+        <td class="num-cell">{{ "%.2f"|format(s.unit_price) }}</td>
+        <td class="num-cell">{{ "%.2f"|format(s.total_amount) }}</td>
+        <td>{{ s.date }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <div class="empty">No sales recorded yet.</div>
+  {% endif %}
+{% endblock %}

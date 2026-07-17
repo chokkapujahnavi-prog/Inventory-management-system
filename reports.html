@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Reports</h1>
+      <p class="subhead">Inventory and sales, summarized.</p>
+    </div>
+  </div>
+
+  <h2>Inventory Report</h2>
+  <div class="stat-strip">
+    <div class="stat">
+      <div class="num">{{ inv.total_products }}</div>
+      <div class="label">Total Products</div>
+    </div>
+    <div class="stat">
+      <div class="num">{{ inv.total_categories }}</div>
+      <div class="label">Total Categories</div>
+    </div>
+    <div class="stat">
+      <div class="num">{{ inv.available_stock }}</div>
+      <div class="label">Available Stock</div>
+    </div>
+    <div class="stat"></div>
+  </div>
+
+  <h2>Sales Report</h2>
+  <div class="stat-strip">
+    <div class="stat">
+      <div class="num">{{ sales.total_products_sold }}</div>
+      <div class="label">Total Products Sold</div>
+    </div>
+    <div class="stat">
+      <div class="num">{{ "%.2f"|format(sales.total_revenue) }}</div>
+      <div class="label">Revenue Generated</div>
+    </div>
+    <div class="stat">
+      <div class="num" style="font-size:16px;">{{ sales.most_sold_name or "—" }}</div>
+      <div class="label">Most Sold Product{% if sales.most_sold_qty %} ({{ sales.most_sold_qty }} units){% endif %}</div>
+    </div>
+    <div class="stat"></div>
+  </div>
+{% endblock %}
